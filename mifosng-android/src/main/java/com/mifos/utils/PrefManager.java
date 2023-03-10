@@ -9,6 +9,8 @@ import com.mifos.App;
 import com.mifos.api.BaseUrl;
 import com.mifos.objects.user.User;
 
+import org.apache.fineract.client.models.PostAuthenticationResponse;
+
 import java.util.Set;
 
 /**
@@ -93,7 +95,7 @@ public class PrefManager {
      * Authentication
      */
 
-    public static void saveUser(User user) {
+    public static void saveUser(PostAuthenticationResponse user) {
         putString(USER_DETAILS, gson.toJson(user));
     }
 

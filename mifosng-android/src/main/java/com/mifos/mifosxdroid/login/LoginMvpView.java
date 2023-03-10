@@ -1,7 +1,8 @@
 package com.mifos.mifosxdroid.login;
 
 import com.mifos.mifosxdroid.base.MvpView;
-import com.mifos.objects.user.User;
+
+import org.apache.fineract.client.models.PostAuthenticationResponse;
 
 /**
  * Created by Rajan Maurya on 4/6/16.
@@ -10,7 +11,7 @@ public interface LoginMvpView extends MvpView {
 
     void showToastMessage(String message);
 
-    void onLoginSuccessful(User user);
+    void onLoginSuccessful(PostAuthenticationResponse postAuthenticationResponse);
 
     void onLoginError(String error);
 

@@ -5,9 +5,11 @@
 
 package com.mifos.mifosxdroid.login;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -19,26 +21,28 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.mifos.api.BaseApiManager;
+
+import androidx.core.content.ContextCompat;
+
 import com.mifos.mifosxdroid.HomeActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.passcode.PassCodeActivity;
-import com.mifos.objects.user.User;
 import com.mifos.utils.Constants;
 import com.mifos.utils.Network;
 import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
+import org.apache.fineract.client.models.PostAuthenticationResponse;
+import org.mifos.core.apimanager.BaseApiManager;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 /**
  * Created by ishankhanna on 08/02/14.
@@ -74,6 +78,9 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     private String password;
     private String domain;
     private boolean isValidUrl = false;
+
+    private BaseApiManager baseApiManager;
+
 
     private TextWatcher urlWatcher = new TextWatcher() {
         @Override
@@ -183,15 +190,15 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     }
 
     @Override
-    public void onLoginSuccessful(User user) {
-        // Saving userID
-        PrefManager.setUserId(user.getUserId());
-        // Saving user's token
-        PrefManager.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
-        // Saving user
-        PrefManager.saveUser(user);
+    public void onLoginSuccessful(PostAuthenticationResponse postAuthenticationResponse) {
 
-        Toast.makeText(this, getString(R.string.toast_welcome) + " " + user.getUsername(),
+        PrefManager.setUserId(Math.toIntExact(postAuthenticationResponse.getUserId()));
+        // Saving user's token
+        PrefManager.saveToken("Basic " + postAuthenticationResponse.getBase64EncodedAuthenticationKey());
+        // Saving user
+        PrefManager.saveUser(postAuthenticationResponse);
+
+        Toast.makeText(this, getString(R.string.toast_welcome) + " " + postAuthenticationResponse.getUsername(),
                 Toast.LENGTH_SHORT).show();
 
         if (PrefManager.getPassCodeStatus()) {
@@ -203,6 +210,28 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         }
         finish();
     }
+
+//    @Override
+//    public void onLoginSuccessful(User user) {
+//        // Saving userID
+//        PrefManager.setUserId(user.getUserId());
+//        // Saving user's token
+//        PrefManager.saveToken("Basic " + user.getBase64EncodedAuthenticationKey());
+//        // Saving user
+//        PrefManager.saveUser(user);
+//
+//        Toast.makeText(this, getString(R.string.toast_welcome) + " " + user.getUsername(),
+//                Toast.LENGTH_SHORT).show();
+//
+//        if (PrefManager.getPassCodeStatus()) {
+//            startActivity(new Intent(this, HomeActivity.class));
+//        } else {
+//            Intent intent = new Intent(this, PassCodeActivity.class);
+//            intent.putExtra(Constants.INTIAL_LOGIN, true);
+//            startActivity(intent);
+//        }
+//        finish();
+//    }
 
     @Override
     public void onLoginError(String errorMessage) {
@@ -229,19 +258,9 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         if (!validateUserInputs()) {
             return;
         }
-        // Saving tenant
-        PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
-        // Saving InstanceURL for next usages
-        PrefManager.setInstanceUrl(instanceURL);
-        // Saving domain name
-        PrefManager.setInstanceDomain(et_domain.getEditableText().toString());
-        // Saving port
-        PrefManager.setPort(et_port.getEditableText().toString());
-        // Updating Services
-        BaseApiManager.createService();
 
         if (Network.isOnline(this)) {
-            mLoginPresenter.login(username, password);
+            mLoginPresenter.login(username, password,instanceURL,et_tenantIdentifier.getEditableText().toString());
         } else {
             showToastMessage(getString(R.string.error_not_connected_internet));
         }
