@@ -3,7 +3,8 @@
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayout.Base"
@@ -153,8 +154,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            app:elevation="6dp"
-            app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_add_white_24dp" />
+            app:borderWidth="0sp"
+            app:fabSize="normal"
+            app:useCompatPadding="false"
+            android:src="@drawable/ic_add_white_24dp" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>
