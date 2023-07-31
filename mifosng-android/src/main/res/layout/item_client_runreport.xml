@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardUseCompatPadding="true"
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:padding="12dp"
+        android:baselineAligned="false">
+
+
+    <LinearLayout
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_gravity="center"
         android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
         android:background="@drawable/circular_bg_gray"
         android:gravity="center">
 
@@ -35,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:textColor="@color/black"
-            android:textSize="22sp"
+            android:textSize="19sp"
             tools:text="Client Listing(Pentaho)" />
 
         <TextView
@@ -53,10 +62,12 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/tv_report_type"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:textColor="@color/gray_dark"
             android:textSize="15sp"
             tools:text="Client" />
     </RelativeLayout>
 
-</LinearLayout>
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

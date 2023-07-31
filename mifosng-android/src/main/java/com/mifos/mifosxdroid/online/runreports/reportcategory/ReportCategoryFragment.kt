@@ -77,11 +77,7 @@ class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
     override fun showReportCategories(reportTypes: List<ClientReportTypeItem>) {
         reportTypeItems = reportTypes
         val layoutManager = LinearLayoutManager(context)
-        val dividerItemDecoration = DividerItemDecoration(
-            binding.recyclerReport.context, layoutManager.orientation
-        )
         binding.recyclerReport.layoutManager = layoutManager
-        binding.recyclerReport.addItemDecoration(dividerItemDecoration)
         reportAdapter = ClientReportAdapter { position: Int ->
             openDetailFragment(position)
             null
