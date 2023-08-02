@@ -30,4 +30,10 @@ class ApplicationModule(protected val mApplication: Application) {
     fun provideBaseApiManager(): BaseApiManager {
         return BaseApiManager()
     }
+
+    @Provides
+    @Singleton
+    fun provideSdkBaseApiManager() : org.mifos.core.apimanager.BaseApiManager {
+        return org.mifos.core.apimanager.BaseApiManager.getInstance()
+    }
 }

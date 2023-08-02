@@ -120,4 +120,10 @@ ext {
 
     //navigation components version
     navigationComponentsVersion = '2.6.0'
+
+    // sdk version
+    sdkVersion = '1.0.2'
+
+    // fineract version
+    fineractClientVersion = '2.0.3'
 }

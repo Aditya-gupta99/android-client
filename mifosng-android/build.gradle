@@ -279,6 +279,11 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationComponentsVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navigationComponentsVersion"
 
+    // sdk dependency
+    implementation "com.github.openMF:mifos-android-sdk-arch:$rootProject.sdkVersion"
+
+    // fineract dependency
+    implementation "com.github.openMF:fineract-client:$rootProject.fineractClientVersion"
 }
 /*
 All direct/transitive dependencies shared between your test and production APKs need to be
