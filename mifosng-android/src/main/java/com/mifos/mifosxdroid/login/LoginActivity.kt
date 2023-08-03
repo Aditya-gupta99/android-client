@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -16,7 +17,11 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.mifos.api.BaseApiManager
+import com.mifos.factories.LoginViewModelFactory
 import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -24,7 +29,9 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.ActivityLoginBinding
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
 import com.mifos.objects.user.User
+import com.mifos.repositories.LoginRepository
 import com.mifos.utils.Constants
+import com.mifos.utils.LoginUiState
 import com.mifos.utils.Network
 import com.mifos.utils.PrefManager.instanceDomain
 import com.mifos.utils.PrefManager.instanceUrl
@@ -35,18 +42,23 @@ import com.mifos.utils.PrefManager.saveUser
 import com.mifos.utils.PrefManager.tenant
 import com.mifos.utils.PrefManager.userId
 import com.mifos.utils.ValidationUtil
+import com.mifos.viewmodels.LoginViewModel
 import javax.inject.Inject
 
 /**
  * Created by ishankhanna on 08/02/14.
  */
-class LoginActivity : MifosBaseActivity(), LoginMvpView {
+class LoginActivity : MifosBaseActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
+    private lateinit var viewModel: LoginViewModel
 
+//    @Inject
+//    lateinit var loginRepository : LoginRepository
     @Inject
-    lateinit var mLoginPresenter: LoginPresenter
+    lateinit var viewModelFactory: LoginViewModelFactory
+
     private lateinit var username: String
     private lateinit var instanceURL: String
     private lateinit var password: String
@@ -80,9 +92,10 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
         super.onCreate(savedInstanceState)
         activityComponent?.inject(this)
         binding = ActivityLoginBinding.inflate(layoutInflater)
+        viewModel = ViewModelProvider(this,viewModelFactory)[LoginViewModel::class.java]
         title = null
         setContentView(binding.root)
-        mLoginPresenter.attachView(this)
+//        mLoginPresenter.attachView(this)
         binding.etInstancePort.inputType = InputType.TYPE_CLASS_NUMBER
         if (port != "80") binding.etInstancePort.setText(port)
         binding.etInstanceURL.setText(instanceDomain)
@@ -101,6 +114,20 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
+        }
+
+        viewModel.loginUiState.observe(this){
+            when(it) {
+                is LoginUiState.ShowProgress -> showProgressbar(it.state)
+                is LoginUiState.ShowLoginSuccessful -> {
+                    hideProgress()
+                    onLoginSuccessful(it.user)
+                }
+                is LoginUiState.ShowError -> {
+                    hideProgress()
+                    onLoginError(it.message)
+                }
+            }
         }
     }
 
@@ -151,11 +178,11 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
         }
     }
 
-    override fun showToastMessage(message: String) {
+    fun showToastMessage(message: String) {
         Toaster.show(findViewById(android.R.id.content), message, Toaster.LONG)
     }
 
-    override fun onLoginSuccessful(user: User) {
+    fun onLoginSuccessful(user: User) {
         // Saving userID
         userId = user.userId
         // Saving user's token
@@ -175,11 +202,11 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
         finish()
     }
 
-    override fun onLoginError(errorMessage: String) {
+    fun onLoginError(errorMessage: String) {
         showToastMessage(errorMessage)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    fun showProgressbar(show: Boolean) {
         if (show) {
             showProgress(getString(R.string.logging_in))
         } else {
@@ -203,7 +230,7 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
         // Updating Services
         BaseApiManager.createService()
         if (Network.isOnline(this)) {
-            mLoginPresenter.login(username, password)
+            viewModel.login(username, password)
         } else {
             showToastMessage(getString(R.string.error_not_connected_internet))
         }
@@ -211,6 +238,6 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
 
     override fun onDestroy() {
         super.onDestroy()
-        mLoginPresenter.detachView()
+//        mLoginPresenter.detachView()
     }
 }
