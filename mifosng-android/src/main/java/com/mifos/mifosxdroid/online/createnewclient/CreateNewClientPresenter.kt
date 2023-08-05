@@ -17,7 +17,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -123,8 +123,8 @@ class CreateNewClientPresenter @Inject constructor(private val mDataManagerClien
                         mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                        .string()
+                                val errorMessage = e.response()?.errorBody()
+                                        ?.string()
                                 mvpView?.showMessage(MFErrorParser.parseError(errorMessage)
                                         .errors[0].defaultUserMessage)
                             }
