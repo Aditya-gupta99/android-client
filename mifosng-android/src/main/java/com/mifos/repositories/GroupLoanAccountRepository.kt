@@ -1,0 +1,16 @@
+package com.mifos.repositories
+
+import com.mifos.objects.accounts.loan.Loans
+import com.mifos.objects.organisation.LoanProducts
+import com.mifos.objects.templates.loans.GroupLoanTemplate
+import com.mifos.services.data.GroupLoanPayload
+import rx.Observable
+
+interface GroupLoanAccountRepository {
+
+    fun allLoans(): Observable<List<LoanProducts>>
+
+    fun getGroupLoansAccountTemplate(groupId: Int, productId: Int): Observable<GroupLoanTemplate>
+
+    fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loans>
+}

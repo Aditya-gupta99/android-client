@@ -47,10 +47,14 @@ import com.mifos.repositories.DataTableRepository
 import com.mifos.repositories.DataTableRepositoryImp
 import com.mifos.repositories.DocumentListRepository
 import com.mifos.repositories.DocumentListRepositoryImp
+import com.mifos.repositories.GenerateCollectionSheetRepository
+import com.mifos.repositories.GenerateCollectionSheetRepositoryImp
 import com.mifos.repositories.GroupDetailsRepository
 import com.mifos.repositories.GroupDetailsRepositoryImp
 import com.mifos.repositories.GroupListRepository
 import com.mifos.repositories.GroupListRepositoryImp
+import com.mifos.repositories.GroupLoanAccountRepository
+import com.mifos.repositories.GroupLoanAccountRepositoryImp
 import com.mifos.repositories.GroupsListRepository
 import com.mifos.repositories.GroupsListRepositoryImp
 import com.mifos.repositories.IndividualCollectionSheetDetailsRepository
@@ -291,5 +295,18 @@ class RepositoryModule {
         dataManagerClient: DataManagerClient
     ): DataTableListRepository {
         return DataTableListRepositoryImp(dataManagerLoan, dataManager, dataManagerClient)
+    }
+
+    @Provides
+    fun providesGenerateCollectionSheetRepository(
+        dataManager: DataManager,
+        collectionDataManager: DataManagerCollectionSheet
+    ): GenerateCollectionSheetRepository {
+        return GenerateCollectionSheetRepositoryImp(dataManager, collectionDataManager)
+    }
+
+    @Provides
+    fun providesGroupLoanAccountRepository(dataManager: DataManager) : GroupLoanAccountRepository {
+        return GroupLoanAccountRepositoryImp(dataManager)
     }
 }
