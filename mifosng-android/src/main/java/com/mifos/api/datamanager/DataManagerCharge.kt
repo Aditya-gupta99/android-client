@@ -20,7 +20,8 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerCharge @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperCharge: DatabaseHelperCharge
+    val mDatabaseHelperCharge: DatabaseHelperCharge,
+    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager
 ) {
     /**
      * This Method Request the Charge API at
