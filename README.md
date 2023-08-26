@@ -27,8 +27,8 @@ Some **features** that are available in the app are:
 ## Screenshots
 
 <p>
-  <img src="https://i.imgur.com/PBVlVDK.png" />
-  <img src="https://i.imgur.com/8Dca3wk.png" />
+  <img src="https://i.imgur.com/X9ijhHN.png" />
+  <img src="https://i.imgur.com/nrBOIcc.png" />
 </p>
 
 ## How to Contribute
