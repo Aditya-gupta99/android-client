@@ -22,11 +22,11 @@ import kotlinx.parcelize.Parcelize
 data class StaffOptions(
     @PrimaryKey
     var id: Int = 0,
-    val firstname: String = "",
-    val lastname: String = "",
-    val displayName: String = "",
-    val officeId: Int = 0,
-    val officeName: String = "",
+    var firstname: String = "",
+    var lastname: String = "",
+    var displayName: String = "",
+    var officeId: Int = 0,
+    var officeName: String = "",
     @SerializedName("isLoanOfficer")
     @Column
     var isLoan_officer: Boolean = false,

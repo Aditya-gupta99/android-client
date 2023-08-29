@@ -24,7 +24,7 @@ import java.util.Arrays
 @Table(database = MifosDatabase::class)
 @ModelContainer
 data class ClientsTemplate(
-    var activationDate: IntArray = intArrayOf(),
+    var activationDate: Array<Int> = arrayOf(),
     @PrimaryKey
     var officeId: Int = 0,
     var officeOptions: List<OfficeOptions> = ArrayList(),

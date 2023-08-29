@@ -3,6 +3,7 @@ package com.mifos.repositories
 import com.mifos.api.GenericResponse
 import com.mifos.api.datamanager.DataManagerClient
 import com.mifos.objects.noncore.Identifier
+import org.apache.fineract.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import rx.Observable
 import javax.inject.Inject
 
@@ -19,7 +20,7 @@ class ClientIdentifiersRepositoryImp @Inject constructor(private val dataManager
     override fun deleteClientIdentifier(
         clientId: Int,
         identifierId: Int
-    ): Observable<GenericResponse> {
+    ): Observable<DeleteClientsClientIdIdentifiersIdentifierIdResponse> {
         return dataManagerClient.deleteClientIdentifier(clientId, identifierId)
     }
 

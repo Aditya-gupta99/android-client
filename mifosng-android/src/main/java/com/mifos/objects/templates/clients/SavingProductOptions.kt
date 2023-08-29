@@ -24,9 +24,9 @@ import kotlinx.parcelize.Parcelize
 data class SavingProductOptions(
     @PrimaryKey
     var id: Int = 0,
-    val name: String = "",
-    val withdrawalFeeForTransfers: Boolean = false,
-    val allowOverdraft: Boolean = false
+    var name: String = "",
+    var withdrawalFeeForTransfers: Boolean = false,
+    var allowOverdraft: Boolean = false
 ) : MifosBaseModel(), Parcelable {
     override fun toString(): String {
         return "SavingProductOptions{" +

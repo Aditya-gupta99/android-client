@@ -9,6 +9,7 @@ import com.mifos.objects.noncore.Identifier
 import com.mifos.repositories.ClientIdentifiersRepository
 import com.mifos.states.ClientIdentifiersUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.apache.fineract.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -59,7 +60,7 @@ class ClientIdentifiersViewModel @Inject constructor(private val repository: Cli
         repository.deleteClientIdentifier(clientId, identifierId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<GenericResponse>() {
+            .subscribe(object : Subscriber<DeleteClientsClientIdIdentifiersIdentifierIdResponse>() {
                 override fun onCompleted() {
                 }
 
@@ -68,7 +69,7 @@ class ClientIdentifiersViewModel @Inject constructor(private val repository: Cli
                         ClientIdentifiersUiState.ShowFetchingError(R.string.failed_to_delete_identifier)
                 }
 
-                override fun onNext(genericResponse: GenericResponse) {
+                override fun onNext(genericResponse: DeleteClientsClientIdIdentifiersIdentifierIdResponse) {
                     _clientIdentifiersUiState.value =
                         ClientIdentifiersUiState.IdentifierDeletedSuccessfully(position)
                 }

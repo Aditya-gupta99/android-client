@@ -20,8 +20,8 @@ import kotlinx.parcelize.Parcelize
 data class OfficeOptions(
     @PrimaryKey
     var id: Int = 0,
-    val name: String = "",
-    val nameDecorated: String = ""
+    var name: String = "",
+    var nameDecorated: String = ""
 ) : MifosBaseModel(), Parcelable {
 
     override fun toString(): String {

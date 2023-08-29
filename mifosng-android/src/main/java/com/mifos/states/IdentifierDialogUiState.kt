@@ -2,6 +2,7 @@ package com.mifos.states
 
 import com.mifos.objects.noncore.IdentifierCreationResponse
 import com.mifos.objects.noncore.IdentifierTemplate
+import org.apache.fineract.client.models.PostClientsClientIdIdentifiersResponse
 
 /**
  * Created by Aditya Gupta on 16/08/23.

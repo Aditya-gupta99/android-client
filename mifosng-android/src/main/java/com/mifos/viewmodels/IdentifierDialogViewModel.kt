@@ -10,6 +10,7 @@ import com.mifos.objects.noncore.IdentifierTemplate
 import com.mifos.repositories.IdentifierDialogRepository
 import com.mifos.states.IdentifierDialogUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.apache.fineract.client.models.PostClientsClientIdIdentifiersResponse
 import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber

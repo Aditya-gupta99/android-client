@@ -1,5 +1,6 @@
 package com.mifos.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -51,6 +52,7 @@ class CreateNewClientViewModel @Inject constructor(private val repository: Creat
                 override fun onError(e: Throwable) {
                     _createNewClientUiState.value =
                         CreateNewClientUiState.ShowMessage(R.string.failed_to_fetch_client_template)
+                    Log.e("@@@",e.message.toString())
                 }
 
                 override fun onNext(clientsTemplate: ClientsTemplate?) {
