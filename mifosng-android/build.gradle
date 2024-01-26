@@ -138,8 +138,14 @@ android {
         }
     }
     buildFeatures {
+        compose true
         viewBinding true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion "1.4.6"
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -286,6 +292,14 @@ dependencies {
 
     // sdk client
     implementation "com.github.openMF:fineract-client:$rootProject.clientVersion"
+
+    // Jetpack Compose
+    implementation "androidx.compose.material:material:$rootProject.composeVersion"
+    implementation "androidx.compose.compiler:compiler:$rootProject.composeCompiler"
+    implementation "androidx.compose.ui:ui-tooling-preview:$rootProject.composeVersion"
+    implementation "androidx.activity:activity-compose:$rootProject.composeActivity"
+    debugImplementation "androidx.compose.ui:ui-tooling:$rootProject.composeVersion"
+    implementation "androidx.compose.material3:material3:$rootProject.materialVersion"
 }
 /*
 All direct/transitive dependencies shared between your test and production APKs need to be
