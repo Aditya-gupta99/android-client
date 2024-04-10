@@ -122,6 +122,7 @@ dependencies {
 
     implementation(project(":feature:auth"))
     implementation(project(":feature:client"))
+    implementation(project(":feature:collection-sheet"))
     implementation(project(":core:data"))
     implementation(project(":core:datastore"))
     implementation(project(":core:network"))
