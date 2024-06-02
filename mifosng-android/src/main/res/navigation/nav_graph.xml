@@ -409,6 +409,9 @@
         android:name="com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment"
         android:label="IndividualCollectionSheetFragment" />
 
+    <action
+        android:id="@+id/action_individualCollectionSheetFragment_to_individualCollectionSheetDetailsFragment"
+        app:destination="@id/individualCollectionSheetDetailsFragment" />
 
     <fragment
         android:id="@+id/generateCollectionSheetFragment"

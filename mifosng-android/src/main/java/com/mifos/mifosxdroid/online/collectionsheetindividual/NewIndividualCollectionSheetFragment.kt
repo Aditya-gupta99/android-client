@@ -44,49 +44,24 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment() {
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
             setContent {
-                NewIndividualCollectionSheetScreen(popupDialog = {
-                    popupDialog(it)
-                }, repaymentDate = {
-                    repaymentDate = it
-                })
+//                NewIndividualCollectionSheetScreen(popupDialog = {
+//                    popupDialog(it)
+//                }, repaymentDate = {
+//                    repaymentDate = it
+//                })
             }
         }
     }
 
-    private fun popupDialog(individualCollectionSheet: IndividualCollectionSheet) {
-        sheet = individualCollectionSheet
-        val collectionSheetDialogFragment = CollectionSheetDialogFragment.newInstance(
-            repaymentDate,
-            sheet?.clients?.size ?: 0
-        )
-        collectionSheetDialogFragment.setTargetFragment(this, 1)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_DOCUMENT_LIST)
-        collectionSheetDialogFragment.show(fragmentTransaction, "Identifier Dialog Fragment")
-    }
 
-    fun getResponse(response: String) {
-        when (response) {
-            Constants.FILLNOW -> {
-                val action = sheet?.let {
-                    NewIndividualCollectionSheetFragmentDirections.actionNewIndividualCollectionSheetFragmentToIndividualCollectionSheetDetailsFragment(
-                        it, SimpleDateFormat(
-                            "dd MMMM yyyy",
-                            Locale.getDefault()
-                        ).format(System.currentTimeMillis()), repaymentDate
-                    )
-                }
-                action?.let { findNavController().navigate(it) }
-            }
-        }
-    }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable(
-            Constants.EXTRA_COLLECTION_INDIVIDUAL,
-            sheet
-        )
-    }
+
+
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putParcelable(
+//            Constants.EXTRA_COLLECTION_INDIVIDUAL,
+//            sheet
+//        )
+//    }
 }

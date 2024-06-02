@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mifos.mifosxdroid.databinding.FragmentCollectionSheetDialogBinding
+import com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment
 import com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetFragment
 import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +54,7 @@ class CollectionSheetDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun setBtnFillNow() {
-        (targetFragment as NewIndividualCollectionSheetFragment).getResponse(Constants.FILLNOW)
+//        (targetFragment as IndividualCollectionSheetFragment).getResponse(Constants.FILLNOW)
     }
 
 

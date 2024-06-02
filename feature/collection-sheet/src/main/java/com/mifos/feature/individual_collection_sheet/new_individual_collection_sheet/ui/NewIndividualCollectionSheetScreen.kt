@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
@@ -31,16 +32,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -56,10 +60,10 @@ import java.util.Locale
 @Composable
 fun NewIndividualCollectionSheetScreen(
     viewModel: NewIndividualCollectionSheetViewModel = hiltViewModel(),
-    popupDialog: (IndividualCollectionSheet) -> Unit,
-    repaymentDate: (String) -> Unit
+    onDetail: (String, IndividualCollectionSheet) -> Unit
 ) {
     val state = viewModel.newIndividualCollectionSheetUiState.collectAsStateWithLifecycle().value
+
     NewIndividualCollectionSheetScreen(
         state = state,
         getStaffList = {
@@ -71,9 +75,8 @@ fun NewIndividualCollectionSheetScreen(
                 transactionDate = _repaymentDate
                 staffId = _staffId
             })
-            repaymentDate(_repaymentDate)
         },
-        popupDialog = popupDialog
+        onDetail = onDetail
     )
 }
 
@@ -83,7 +86,7 @@ fun NewIndividualCollectionSheetScreen(
     state: NewIndividualCollectionSheetUiState,
     getStaffList: (Int) -> Unit,
     generateCollection: (Int, Int, String) -> Unit,
-    popupDialog: (IndividualCollectionSheet) -> Unit
+    onDetail: (String, IndividualCollectionSheet) -> Unit
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -94,6 +97,7 @@ fun NewIndividualCollectionSheetScreen(
     var staffId by rememberSaveable { mutableIntStateOf(0) }
 
     val snackbarHostState = remember { SnackbarHostState() }
+    var showCollectionSheetDialog by rememberSaveable { mutableStateOf(false) }
 
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
     var repaymentDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
@@ -105,6 +109,11 @@ fun NewIndividualCollectionSheetScreen(
             }
         }
     )
+    var individualCollectionSheet by rememberSaveable {
+        mutableStateOf<IndividualCollectionSheet?>(
+            null
+        )
+    }
 
     LaunchedEffect(key1 = state.error) {
         state.error?.let { snackbarHostState.showSnackbar(it) }
@@ -112,7 +121,8 @@ fun NewIndividualCollectionSheetScreen(
 
     LaunchedEffect(key1 = state.individualCollectionSheet) {
         state.individualCollectionSheet?.let {
-            popupDialog(it)
+            individualCollectionSheet = it
+            showCollectionSheetDialog = true
         }
     }
 
@@ -148,7 +158,33 @@ fun NewIndividualCollectionSheetScreen(
                 DatePicker(state = datePickerState)
             }
         }
-
+        if (showCollectionSheetDialog) {
+            MifosBottomSheet(
+                content = {
+                    CollectionSheetDialogContent(
+                        date = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
+                            repaymentDate
+                        ),
+                        member = individualCollectionSheet?.clients?.size.toString(),
+                        fillNow = {
+                            showCollectionSheetDialog = false
+                            individualCollectionSheet?.let {
+                                onDetail(
+                                    SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
+                                        repaymentDate
+                                    ),
+                                    it
+                                )
+                            }
+                        },
+                        onDismiss = {
+                            showCollectionSheetDialog = false
+                        })
+                },
+                onDismiss = {
+                    showCollectionSheetDialog = false
+                })
+        }
         if (state.isLoading) {
             MifosCircularProgress()
         } else {
@@ -250,6 +286,7 @@ fun NewIndividualCollectionSheetScreen(
                             selectedOffice = ""
                             repaymentDate = System.currentTimeMillis()
                             selectedStaff = ""
+                            individualCollectionSheet = null
                         },
                         modifier = Modifier
                             .weight(1f)
@@ -270,6 +307,101 @@ fun NewIndividualCollectionSheetScreen(
     }
 }
 
+@Composable
+fun CollectionSheetDialogContent(
+    date: String,
+    member: String,
+    fillNow: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    MifosBottomSheet(content = {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 15.dp, end = 16.dp, bottom = 16.dp)
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(id = R.string.feature_collection_sheet_found_sheet),
+                style = TextStyle(
+                    fontSize = 24.sp
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(id = R.string.feature_collection_sheet_fill_collection_sheet_message),
+                style = TextStyle(
+                    fontSize = 16.sp
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Row {
+                Text(
+                    text = stringResource(id = R.string.feature_collection_sheet_date),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = date,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Normal
+                    )
+                )
+            }
+
+            Row {
+                Text(
+                    text = stringResource(id = R.string.feature_collection_sheet_member),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = member,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Normal
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                Button(
+                    onClick = fillNow,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
+                    )
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.feature_collection_sheet_fill_now),
+                        fontSize = 16.sp
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Button(
+                    onClick = onDismiss,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
+                    )
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.feature_collection_sheet_cancel),
+                        fontSize = 16.sp
+                    )
+                }
+            }
+        }
+    }, onDismiss = onDismiss)
+}
+
 @Preview(showSystemUi = true)
 @Composable
 private fun NewIndividualCollectionSheetPreview() {
@@ -278,6 +410,12 @@ private fun NewIndividualCollectionSheetPreview() {
         getStaffList = {},
         generateCollection = { _, _, _ ->
         },
-        popupDialog = {}
+        onDetail = { _, _ -> }
     )
+}
+
+@Preview
+@Composable
+private fun CollectionSheetDialogContentPreview() {
+    CollectionSheetDialogContent(date = "19 June 2024", member = "5", fillNow = {}, onDismiss = {})
 }
