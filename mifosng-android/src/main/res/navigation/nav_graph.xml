@@ -574,14 +574,6 @@
             app:destination="@id/paymentDetailsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/newIndividualCollectionSheetFragment"
-        android:name="com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetFragment"
-        android:label="NewIndividualCollectionSheetFragment" >
-        <action
-            android:id="@+id/action_newIndividualCollectionSheetFragment_to_individualCollectionSheetDetailsFragment"
-            app:destination="@id/individualCollectionSheetDetailsFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/paymentDetailsFragment"
         android:name="com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment"
         android:label="PaymentDetailsFragment" >
